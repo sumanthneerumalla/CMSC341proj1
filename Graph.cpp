@@ -22,14 +22,14 @@ Graph::Graph(const Graph &G) {
   AdjListNode *curr2, *next2;
 
   for (int i = 0; i < m_size; ++i) {
-    curr = m_adjLists[0];
-    curr2 = G.m_adjLists[0];
+    curr = m_adjLists[i];
+    curr2 = G.m_adjLists[i];
 
     //iterate through each edge in the second graph, for each vertex
     while (curr2 != NULL) {
       //hold onto the next edge
       next2 = curr2->next;
-
+      addEdge(i,curr2->m_vertex);
       curr2 = next2;
     }
   }

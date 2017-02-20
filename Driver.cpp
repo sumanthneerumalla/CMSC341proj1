@@ -17,6 +17,13 @@ int main() {
   G.addEdge(0, 3);
 
   // dump out data structure
+  cout<< "dumping G"<<endl;
   G.dump() ;
 
+  cout<<"dumping H"<<endl<<endl;
+  Graph I(5);
+  I.dump();
+
+  Graph H(G);
+  H.dump();
 }
