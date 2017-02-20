@@ -18,11 +18,9 @@ Graph::Graph(const Graph &G) {
   m_adjLists = new AdjListNode *[m_size];
 
   //iterate through each array and copy over the linked list data.
-  AdjListNode *curr, *next;
   AdjListNode *curr2, *next2;
 
   for (int i = 0; i < m_size; ++i) {
-    curr = m_adjLists[i];
     curr2 = G.m_adjLists[i];
 
     //iterate through each edge in the second graph, for each vertex
@@ -30,7 +28,7 @@ Graph::Graph(const Graph &G) {
       //hold onto the next edge
       next2 = curr2->next;
       //avoid adding the same edge twice.
-      if(i< curr2->m_vertex) {
+      if (i < curr2->m_vertex) {
         addEdge(i, curr2->m_vertex);
       }
       curr2 = next2;
@@ -81,7 +79,7 @@ void Graph::dump() {
   //iterate through the array of linked list
   AdjListNode *curr, *next;
 
-  cout << "Dump out graph (size = " << size()<< "):" << endl;
+  cout << "Dump out graph (size = " << size() << "):" << endl;
   for (int i = 0; i < size(); ++i) {
     curr = m_adjLists[i];
     cout << "[ " << i << "]: ";
