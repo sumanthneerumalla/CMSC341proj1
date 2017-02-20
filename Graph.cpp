@@ -29,7 +29,10 @@ Graph::Graph(const Graph &G) {
     while (curr2 != NULL) {
       //hold onto the next edge
       next2 = curr2->next;
-      addEdge(i,curr2->m_vertex);
+      //avoid adding the same edge twice.
+      if(i< curr2->m_vertex) {
+        addEdge(i, curr2->m_vertex);
+      }
       curr2 = next2;
     }
   }
@@ -62,7 +65,7 @@ void Graph::addEdge(int u, int v) {
   next = m_adjLists[u];
   m_adjLists[u] = new AdjListNode(v, next);
 
-//  cout << "added edge " << u << " to " << v << endl;
+  cout << "added edge " << u << " to " << v << endl;
 
   next = m_adjLists[v];
   m_adjLists[v] = new AdjListNode(u, next);
@@ -78,8 +81,8 @@ void Graph::dump() {
   //iterate through the array of linked list
   AdjListNode *curr, *next;
 
-  cout << "Dump out graph (size = " << m_size << "):" << endl;
-  for (int i = 0; i < m_size; ++i) {
+  cout << "Dump out graph (size = " << size()<< "):" << endl;
+  for (int i = 0; i < size(); ++i) {
     curr = m_adjLists[i];
     cout << "[ " << i << "]: ";
     //use a while loop to print out each edge connection
