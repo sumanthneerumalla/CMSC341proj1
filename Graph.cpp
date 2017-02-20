@@ -75,6 +75,7 @@ void Graph::addEdge(int u, int v) {
 int Graph::size() {
   return m_size;
 }
+
 void Graph::dump() {
   //iterate through the array of linked list
   AdjListNode *curr, *next;
@@ -94,7 +95,67 @@ void Graph::dump() {
   }
 }
 
+const Graph &Graph::operator=(const Graph &rhs) {
+  if(this == &rhs) // this is a self assignment checker
+  { return *this; }	// returns the pointer to the current object
+  // otherwise copy
+
+  //copied code from destructor to deallocate all dynamic memory
+  //iterate through the array of linked list
+  AdjListNode *curr, *next;
+  for (int i = 0; i < m_size; ++i) {
+    curr = m_adjLists[0];
+
+    //use a while loop to delete each edge connection
+    while (curr != NULL) {
+      next = curr->next;
+      delete curr;
+      curr = next;
+    }
+
+  }
+
+  //delete the array of pointers
+  delete[] m_adjLists;
+
+  //copied code from copy constructor to copy over new dynamic data
+
+  //copy over member variable for size
+  m_size = rhs.m_size;
+
+  //allocate new dynamic array with that size
+  m_adjLists = new AdjListNode *[m_size];
+
+  //iterate through each array and copy over the linked list data.
+  AdjListNode *curr2, *next2;
+
+  for (int i = 0; i < m_size; ++i) {
+    curr2 = rhs.m_adjLists[i];
+
+    //iterate through each edge in the second graph, for each vertex
+    while (curr2 != NULL) {
+      //hold onto the next edge
+      next2 = curr2->next;
+      //avoid adding the same edge twice.
+      if (i < curr2->m_vertex) {
+        addEdge(i, curr2->m_vertex);
+      }
+      curr2 = next2;
+    }
+  }
+  return *this;
+}
+
 Graph::AdjListNode::AdjListNode(int v, Graph::AdjListNode *ptr) {
   m_vertex = v;
   next = ptr;
+}
+
+Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
+  //define member variables
+
+  m_Gptr = Gptr;
+  //set to -1 so we know its not a valid in case we want to double check
+  m_source = -1;
+  m_where = NULL;
 }
