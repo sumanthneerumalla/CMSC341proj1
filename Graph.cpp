@@ -159,17 +159,10 @@ Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
 
   //if isend is true we make an end constructor
   if (isEnd == true and Gptr != NULL and v != -1) {
-    AdjListNode *curr = Gptr->m_adjLists[v]; //set curr to start at the first node in the neighbor list
-    AdjListNode *temp;
-    while (curr->next != NULL) { //iterate through linked list till we get to the last node
-      temp = curr->next;
-      curr = temp;
-    }
-    //curr should point to the last node now
-    m_where = curr;
+    m_where = NULL;
   }
     //if it is end is not true we make a regular nbiterator, that starts at the beginning of the neighbor list
-  else if (isEnd == true and Gptr != NULL and v != -1) {
+  else if (isEnd == false and Gptr != NULL and v != -1) {
     m_where = Gptr->m_adjLists[v];
   }
   else {
@@ -179,10 +172,19 @@ Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
 
 }
 bool Graph::NbIterator::operator!=(const Graph::NbIterator &rhs) {
-  if (m_where != rhs.m_where){
+  if (m_where != rhs.m_where) {
     //if the addresses of the mwheres of each iterator are not the same, return true
     return true;
   }
   //otherwise return false
   return false;
+}
+void Graph::NbIterator::operator++(int dummy) {
+  if (m_where->next != NULL) {
+    //increment the pointer only if the next node isn't null
+    m_where = m_where->next;
+  }
+}
+int Graph::NbIterator::operator*() {
+  return m_where->m_vertex;
 }
