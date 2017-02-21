@@ -96,8 +96,8 @@ void Graph::dump() {
 }
 
 const Graph &Graph::operator=(const Graph &rhs) {
-  if(this == &rhs) // this is a self assignment checker
-  { return *this; }	// returns the pointer to the current object
+  if (this == &rhs) // this is a self assignment checker
+  { return *this; }    // returns the pointer to the current object
   // otherwise copy
 
   //copied code from destructor to deallocate all dynamic memory
@@ -152,10 +152,37 @@ Graph::AdjListNode::AdjListNode(int v, Graph::AdjListNode *ptr) {
 }
 
 Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
-  //define member variables
-
   m_Gptr = Gptr;
-  //set to -1 so we know its not a valid in case we want to double check
-  m_source = -1;
-  m_where = NULL;
+  m_source = v;
+  //honestly i dont see the point of storing these variables if the iterator is just used for
+  //comparing the mhwere variable
+
+  //if isend is true we make an end constructor
+  if (isEnd == true and Gptr != NULL and v != -1) {
+    AdjListNode *curr = Gptr->m_adjLists[v]; //set curr to start at the first node in the neighbor list
+    AdjListNode *temp;
+    while (curr->next != NULL) { //iterate through linked list till we get to the last node
+      temp = curr->next;
+      curr = temp;
+    }
+    //curr should point to the last node now
+    m_where = curr;
+  }
+    //if it is end is not true we make a regular nbiterator, that starts at the beginning of the neighbor list
+  else if (isEnd == true and Gptr != NULL and v != -1) {
+    m_where = Gptr->m_adjLists[v];
+  }
+  else {
+    m_where = NULL;
+    //in any other circumstance, mwhere is not valid
+  }
+
+}
+bool Graph::NbIterator::operator!=(const Graph::NbIterator &rhs) {
+  if (m_where != rhs.m_where){
+    //if the addresses of the mwheres of each iterator are not the same, return true
+    return true;
+  }
+  //otherwise return false
+  return false;
 }

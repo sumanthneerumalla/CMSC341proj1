@@ -46,13 +46,13 @@ public:
    // Edge Iterator inner class
    class EgIterator {
 
-      public: 
+      public:
          // Edge Iterator constructor, isEnd true to create end iterator
 	 EgIterator(Graph *Gptr = NULL, bool isEnd = false) ;
 
          // Compare iterators, only makes sense to compare with end iterator
 	 bool operator!= (const EgIterator& rhs) ;
-	 
+
 	 // Move iterator to next printable edge
 	 void operator++(int dummy) ;   // post increment
 
@@ -76,8 +76,8 @@ public:
    // Neighbor Iterator inner class
    class NbIterator {
 
-      public: 
-         // Constructor for iterator for vertices adjacent to vertex v 
+      public:
+         // Constructor for iterator for vertices adjacent to vertex v
 	 NbIterator(Graph *Gptr = NULL, int v = -1, bool isEnd = false) ;
 
          // Compare iterators, only makes sense to compare with end iterator
@@ -90,7 +90,7 @@ public:
 	 int operator*() ;
 
       private:
-         Graph *m_Gptr ;          // which graph?
+     Graph *m_Gptr ;          // which graph?
 	 int m_source ;           // neighbor of which vertex?
 	 AdjListNode *m_where ;   // location in linked list
    } ;
@@ -115,14 +115,14 @@ private:
       friend class NbIterator ;
 
       private:
-         // construct a node 
-	 AdjListNode(int v=-1, AdjListNode *ptr=NULL) ;      
+         // construct a node
+	 AdjListNode(int v=-1, AdjListNode *ptr=NULL) ;
 
 	 int m_vertex ;        // holds one neighbor vertex
 	 AdjListNode * next ;  // next node
    } ;
 
-  
+
    // pointer to a dynamically allocated array of linked lists
    // of AdjListNodes
    AdjListNode ** m_adjLists ;
