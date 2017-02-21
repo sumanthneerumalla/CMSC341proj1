@@ -146,6 +146,13 @@ const Graph &Graph::operator=(const Graph &rhs) {
   return *this;
 }
 
+Graph::NbIterator Graph::nbBegin(int v) {
+  return Graph::NbIterator(this,v,false);
+}
+Graph::NbIterator Graph::nbEnd(int v) {
+  return Graph::NbIterator(this,v,true);
+}
+
 Graph::AdjListNode::AdjListNode(int v, Graph::AdjListNode *ptr) {
   m_vertex = v;
   next = ptr;
