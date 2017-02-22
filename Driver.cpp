@@ -36,7 +36,7 @@ int main() {
 
   // Test edge iterator
   //
-    Graph::EgIterator eit ;
+  Graph::EgIterator eit ;
 //    cout<< "constructor works"<<endl;
 //
   pair<int,int> edge ;

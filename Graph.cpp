@@ -248,15 +248,20 @@ bool Graph::EgIterator::operator!=(const Graph::EgIterator &rhs) {
 }
 void Graph::EgIterator::operator++(int dummy) {
   do{
+//    first increment to the next node
     m_where = m_where->next;
+    //keep iterating through to the next msrouce as long as there are null
     while (m_where == NULL) {
       m_source++;
       if (m_source == m_Gptr->m_size) {
         break;
       }
+      //pointo the first node in the next source
       m_where = m_Gptr->m_adjLists[m_source];
     }
   }  while((m_where != NULL) and ( m_source > m_where->m_vertex));
+
+
     /*bool validNodeNotFound = true;
     while(validNodeNotFound) {
 

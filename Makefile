@@ -1,4 +1,4 @@
-CXXFLAGS = -Wall
+CXXFLAGS = -Wall -g
 
 Driver.out: Graph.o Driver.o
 		g++ $(CXXFLAGS) Graph.o Driver.o -o Driver.out
