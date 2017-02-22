@@ -166,12 +166,18 @@ const Graph &Graph::operator=(const Graph &rhs) {
 Graph::NbIterator Graph::nbBegin(int v) {
   return Graph::NbIterator(this, v, false);
 }
+
+
 Graph::NbIterator Graph::nbEnd(int v) {
   return Graph::NbIterator(this, v, true);
 }
+
+
 Graph::EgIterator Graph::egBegin() {
   return Graph::EgIterator(this, false);
 }
+
+
 Graph::EgIterator Graph::egEnd() {
   return Graph::EgIterator(this, true);
 }
@@ -201,6 +207,8 @@ Graph::NbIterator::NbIterator(Graph *Gptr, int v, bool isEnd) {
   }
 
 }
+
+
 bool Graph::NbIterator::operator!=(const Graph::NbIterator &rhs) {
   if (m_where != rhs.m_where) {
     //if the addresses of the mwheres of each iterator are not the same, return true
@@ -209,12 +217,16 @@ bool Graph::NbIterator::operator!=(const Graph::NbIterator &rhs) {
   //otherwise return false
   return false;
 }
+
+
 void Graph::NbIterator::operator++(int dummy) {
   if (m_where != NULL) {
     //increment the pointer only if the next node isn't null
     m_where = m_where->next;
   }
 }
+
+
 int Graph::NbIterator::operator*() {
   if (m_where == NULL) {
     throw out_of_range("NbIterator dereference error.");
@@ -222,6 +234,8 @@ int Graph::NbIterator::operator*() {
 
   return m_where->m_vertex;
 }
+
+
 Graph::EgIterator::EgIterator(Graph *Gptr, bool isEnd) {
   if (Gptr == NULL) { return; }
 
@@ -246,6 +260,8 @@ bool Graph::EgIterator::operator!=(const Graph::EgIterator &rhs) {
   //otherwise we return true
   return true;
 }
+
+
 void Graph::EgIterator::operator++(int dummy) {
   do{
 //    first increment to the next node
