@@ -3,10 +3,17 @@ using namespace std;
 #include <iostream>
 
 Graph::Graph(int n) {
-  if (n < 0 or n == 0) {
+  if (n <= 0) {
     throw std::out_of_range("Not possible to insert that number of vertices");
   }
+
   m_adjLists = new AdjListNode *[n];
+
+  //initialize array to be null, just in case
+  for (int i = 0; i < n; ++i) {
+    m_adjLists[n] = NULL;
+  }
+
   m_size = n;
 }
 
@@ -38,15 +45,15 @@ Graph::Graph(const Graph &G) {
 
 Graph::~Graph() {
   //iterate through the array of linked list
-  AdjListNode *curr, *next;
+  AdjListNode *currN, *nextN;
   for (int i = 0; i < m_size; ++i) {
-    curr = m_adjLists[0];
+    currN = m_adjLists[i];
 
     //use a while loop to delete each edge connection
-    while (curr != NULL) {
-      next = curr->next;
-      delete curr;
-      curr = next;
+    while (currN != NULL) {
+      nextN = currN->next;
+      delete currN;
+      currN = nextN;
     }
 
   }
@@ -56,6 +63,14 @@ Graph::~Graph() {
 }
 
 void Graph::addEdge(int u, int v) {
+
+  if ((u > m_size - 1) or (v < 0)) {
+    throw out_of_range("NbIterator dereference error.");
+  }
+  if ((v > m_size - 1) or (u < 0)) {
+    throw out_of_range("NbIterator dereference error.");
+  }
+
 //add an edge to the first vertex
   AdjListNode *next;
 
@@ -63,11 +78,13 @@ void Graph::addEdge(int u, int v) {
   next = m_adjLists[u];
   m_adjLists[u] = new AdjListNode(v, next);
 
-  cout << "added edge " << u << " to " << v << endl;
+//  cout << "added edge " << u << " to " << v << endl;
 
+  //add the second edge only if the two vertices are not the same
+  if (u != v) {
   next = m_adjLists[v];
   m_adjLists[v] = new AdjListNode(u, next);
-
+}
 //  cout << "added edge " << v << " to " << u << endl;
 
 };
@@ -147,10 +164,16 @@ const Graph &Graph::operator=(const Graph &rhs) {
 }
 
 Graph::NbIterator Graph::nbBegin(int v) {
-  return Graph::NbIterator(this,v,false);
+  return Graph::NbIterator(this, v, false);
 }
 Graph::NbIterator Graph::nbEnd(int v) {
-  return Graph::NbIterator(this,v,true);
+  return Graph::NbIterator(this, v, true);
+}
+Graph::EgIterator Graph::egBegin() {
+  return Graph::EgIterator(this, false);
+}
+Graph::EgIterator Graph::egEnd() {
+  return Graph::EgIterator(this, true);
 }
 
 Graph::AdjListNode::AdjListNode(int v, Graph::AdjListNode *ptr) {
@@ -187,11 +210,97 @@ bool Graph::NbIterator::operator!=(const Graph::NbIterator &rhs) {
   return false;
 }
 void Graph::NbIterator::operator++(int dummy) {
-  if (m_where->next != NULL) {
+  if (m_where != NULL) {
     //increment the pointer only if the next node isn't null
     m_where = m_where->next;
   }
 }
 int Graph::NbIterator::operator*() {
+  if (m_where == NULL) {
+    throw out_of_range("NbIterator dereference error.");
+  }
+
   return m_where->m_vertex;
+}
+Graph::EgIterator::EgIterator(Graph *Gptr, bool isEnd) {
+  if (Gptr == NULL) { return; }
+
+  m_Gptr = Gptr;
+
+  if (isEnd == true) {
+    m_source = Gptr->size() - 1;
+    m_where = NULL;
+  }
+  else {
+    m_source = 0;
+    m_where = Gptr->m_adjLists[0];
+
+  }
+}
+
+bool Graph::EgIterator::operator!=(const Graph::EgIterator &rhs) {
+  if ((m_Gptr == rhs.m_Gptr) and (m_source == rhs.m_source) and (m_where == m_where)) {
+    //only if its the same node in the same graph in the same vertex, we return false
+    return false;
+  }
+  //otherwise we return true
+  return true;
+}
+void Graph::EgIterator::operator++(int dummy) {
+bool validNodeNotFound = true;
+  while(validNodeNotFound) {
+    //iterate through nodes until non NULL node is found
+    while (m_where == NULL) {
+      m_source++;
+      if (m_source > m_Gptr->size() - 1) {
+        //if we've gone past the last index
+        return;
+      }
+      m_where = m_Gptr->m_adjLists[m_source];
+    }
+    //at this point we can guarantee that mwhere is not pointing to a null node
+    //iterate one node if m_source < m_where vertex
+    if(m_source < m_where->m_vertex){
+      //we increment by only one node if this is the case, and recheck for null nodes
+      m_where = m_where->next; }
+    //hopefully mwhere is pointing to a valid node now
+    if((m_where != NULL) and (m_source >= m_where->m_vertex)){
+      // its not a null node, and the vertex is not less than the msource
+      validNodeNotFound = false;
+      //loop will not run anymore if this is the case
+    }
+    if((m_where == NULL) and (m_source == m_Gptr->size()) ){
+      //we have reached the end of the graph
+      break;
+    }
+    cout<< "source is"<< m_source<<endl;
+  }
+
+
+//  m_where = m_where->next;
+//  cout << "mwhere is " << m_where << endl;
+//  if (m_where != NULL) {
+//    while (m_where->m_vertex < m_source) {
+//      if (m_where == NULL) {
+//        //if at the end of a linked list, move onto first node in next linked list
+//        m_source++;
+//        if (m_source > m_Gptr->size() - 1) {
+//          return;
+//        }
+//        m_where = m_Gptr->m_adjLists[m_source];
+//      }
+//      else {
+//        m_where = m_where->next;
+//      }
+//    }
+//  }
+}
+
+std::pair<int, int> Graph::EgIterator::operator*() {
+
+  if (m_where == NULL) {
+    throw out_of_range("EgIterator dereference error.");
+  }
+
+  return std::pair<int, int>(m_source, m_where->m_vertex);
 }
