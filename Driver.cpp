@@ -43,13 +43,13 @@ int main() {
   cout << "\nThe edges in the graph are:\n" ;
   for (eit = G.egBegin() ; eit != G.egEnd() ; eit++) {
 
-    cout<< "iterated"<<endl;
+//    cout<< "iterated"<<endl;
 //
-//    edge = *eit ;   // get current edge
+    edge = *eit ;   // get current edge
 //
 //    // the two data members of a pair are first and second
 //    //
-//    cout << "(" << edge.first << ", " << edge.second << ") " ;
+    cout << "(" << edge.first << ", " << edge.second << ") " ;
 
   }
 //  cout << endl ;

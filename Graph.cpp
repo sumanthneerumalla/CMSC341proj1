@@ -228,7 +228,7 @@ Graph::EgIterator::EgIterator(Graph *Gptr, bool isEnd) {
   m_Gptr = Gptr;
 
   if (isEnd == true) {
-    m_source = Gptr->size() - 1;
+    m_source = Gptr->size() ;
     m_where = NULL;
   }
   else {
@@ -247,35 +247,53 @@ bool Graph::EgIterator::operator!=(const Graph::EgIterator &rhs) {
   return true;
 }
 void Graph::EgIterator::operator++(int dummy) {
-bool validNodeNotFound = true;
-  while(validNodeNotFound) {
-    //iterate through nodes until non NULL node is found
+  do{
+    m_where = m_where->next;
     while (m_where == NULL) {
       m_source++;
-      if (m_source > m_Gptr->size() - 1) {
-        //if we've gone past the last index
-        return;
+      if (m_source == m_Gptr->m_size) {
+        break;
       }
       m_where = m_Gptr->m_adjLists[m_source];
     }
-    //at this point we can guarantee that mwhere is not pointing to a null node
-    //iterate one node if m_source < m_where vertex
-    if(m_source < m_where->m_vertex){
-      //we increment by only one node if this is the case, and recheck for null nodes
-      m_where = m_where->next; }
-    //hopefully mwhere is pointing to a valid node now
-    if((m_where != NULL) and (m_source >= m_where->m_vertex)){
-      // its not a null node, and the vertex is not less than the msource
-      validNodeNotFound = false;
-      //loop will not run anymore if this is the case
-    }
-    if((m_where == NULL) and (m_source == m_Gptr->size()) ){
-      //we have reached the end of the graph
-      break;
-    }
-    cout<< "source is"<< m_source<<endl;
-  }
+  }  while((m_where != NULL) and ( m_source > m_where->m_vertex));
+    /*bool validNodeNotFound = true;
+    while(validNodeNotFound) {
 
+      m_where = m_where;
+      m_Gptr = m_Gptr;
+      m_Gptr->m_adjLists = m_Gptr->m_adjLists;
+      m_source = m_source;
+
+      //iterate through nodes until non NULL node is found
+      while (m_where == NULL) {
+        m_source++;
+        if (m_source > m_Gptr->size() - 1) {
+          //if we've gone past the last index
+          return;
+        }
+        m_where = m_Gptr->m_adjLists[m_source];
+        cout<< "updated to next source"<<endl;
+      }
+      //at this point we can guarantee that mwhere is not pointing to a null node
+      //iterate one node if m_source < m_where vertex
+      if(m_source < m_where->m_vertex){
+        //we increment by only one node if this is the case, and recheck for null nodes
+        cout<< "incremented to next node"<< endl;
+        m_where = m_where->next;
+      cout<< m_where<<endl;}
+      //hopefully mwhere is pointing to a valid node now
+      if((m_where != NULL) and (m_source < m_where->m_vertex)){
+        // its not a null node, and the vertex is not less than the msource
+        validNodeNotFound = false;
+        //loop will not run anymore if this is the case
+      }
+      if((m_where == NULL) and (m_source == m_Gptr->size()) ){
+        //we have reached the end of the graph
+  return;    }
+      cout<< "source is"<< m_source<<endl;
+      }
+  */
 
 //  m_where = m_where->next;
 //  cout << "mwhere is " << m_where << endl;
@@ -294,6 +312,17 @@ bool validNodeNotFound = true;
 //      }
 //    }
 //  }
+
+
+//  m_where = m_where->next;
+//
+//  if(m_where == NULL){
+//    m_source = m_source++;
+//    m_where = m_Gptr->m_adjLists[m_source];
+//  }
+//
+
+
 }
 
 std::pair<int, int> Graph::EgIterator::operator*() {
